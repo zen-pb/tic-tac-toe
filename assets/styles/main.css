@@ -17,19 +17,16 @@ body {
     align-items: center;
 }
 
-.players {
+.item {
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
     display: flex;
-    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
-.player1,
-.player2 {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-}
-
-.player1 button,
-.player2 button {
-    align-self: center;
+.item:hover {
+    background-color: rgb(167, 248, 221);
 }
