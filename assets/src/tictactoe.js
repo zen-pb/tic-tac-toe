@@ -17,19 +17,6 @@
 //     }
 // })();
 
-// let board = [
-//   ["A", "B", "C"],
-//   ["D", "E", "F"],
-//   ["G", "H", "I"],
-// ];
-
-// for (let i = 0; i < board.length; i++) {
-//   let line = "";
-//   for (let j = 0; j < board[0].length; j++) {
-//     line += board[i][j] + " ";
-//   }
-//   console.log(line);
-// }
 
 document.addEventListener("DOMContentLoaded", () => {
   printBoard();
@@ -50,6 +37,10 @@ let board = new Map([
 const gameBoard = document.getElementById("board");
 
 function printBoard() {
+  updateBoard();
+}
+
+function updateBoard() {
   gameBoard.innerHTML = "";
   for (let [key, value] of board.entries()) {
     const div = document.createElement("div");
@@ -60,20 +51,14 @@ function printBoard() {
   }
 }
 
-function whenEnter() {
-  const gameTiles = document.querySelectorAll("div.item");
+gameBoard.addEventListener("click", (event) => {
+  if (event.target.classList.contains("item")) {
+    const tileKey = event.target.getAttribute("data-tile");
+    playerInput(tileKey);
+  }
+});
 
-  gameTiles.forEach((tile) => {
-    tile.addEventListener("click", () => {
-     
-    });
-  });
-}
-
-function playerInput(id, input) {
-  // board.set(input.toUpperCase(), id.toUpperCase());
-}
-
-function setX(input) {
-  board.set(input, "X");
+function playerInput(tileKey) {
+  board.set(tileKey, "X"); 
+  updateBoard(); 
 }
