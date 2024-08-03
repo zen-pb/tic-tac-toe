@@ -27,7 +27,7 @@ let turnCount = 0;
 let xTiles = [];
 let oTiles = [];
 
-const winningCombination = [
+const winningCombinations = [
   ["TL", "TM", "TR"],
   ["ML", "M", "MR"],
   ["BL", "BM", "BR"],
@@ -75,12 +75,19 @@ gameBoard.addEventListener("click", (event) => {
 });
 
 function playerInput(tileKey) {
+  const inputObj = {
+    tile: tileKey,
+    turnSymbol: playerTurn(),
+  };
+
+  tileContentChecker(inputObj);
+
   if (turnCount !== 9) {
-    board.set(tileKey, playerTurn());
+    board.set(inputObj.tile, inputObj.turnSymbol);
     turnCount++;
     updateBoard();
   } else {
-    alert("Game already ended!");
+    alert("Game draw!");
   }
 }
 
@@ -95,4 +102,32 @@ function playerTurn() {
   }
 
   return symbol;
+}
+
+function tileContentChecker(obj) {
+  switch (obj.turnSymbol) {
+    case "X":
+      xTiles.push(obj.tile);
+      break;
+    case "O":
+      oTiles.push(obj.tile);
+      break;
+  }
+}
+
+function winChecker() {
+  let winner = {
+    symbol: "",
+    bool: false,
+  };
+
+  if (xTiles.filter((value) => winningCombinations.includes(value))) {
+    winner.symbol = "X";
+    winner.bool = true;
+  } else if (oTiles.filter((value) => winningCombinations.includes(value))) {
+    winner.symbol = "O";
+    winner.bool = true;
+  }
+
+  return winner;
 }
