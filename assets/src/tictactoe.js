@@ -24,6 +24,20 @@ document.addEventListener("DOMContentLoaded", () => {
 let turnX = true;
 let turnCount = 0;
 
+let xTiles = [];
+let oTiles = [];
+
+const winningCombination = [
+  ["TL", "TM", "TR"],
+  ["ML", "M", "MR"],
+  ["BL", "BM", "BR"],
+  ["TL", "ML", "BL"],
+  ["TM", "M", "BM"],
+  ["TR", "MR", "BR"],
+  ["TL", "M", "BR"],
+  ["TR", "M", "BL"],
+];
+
 let board = new Map([
   ["TL", ""],
   ["TM", ""],
