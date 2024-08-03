@@ -17,10 +17,12 @@
 //     }
 // })();
 
-
 document.addEventListener("DOMContentLoaded", () => {
   printBoard();
 });
+
+let turnX = true;
+let turnCount = 0;
 
 let board = new Map([
   ["TL", ""],
@@ -59,6 +61,24 @@ gameBoard.addEventListener("click", (event) => {
 });
 
 function playerInput(tileKey) {
-  board.set(tileKey, "X"); 
-  updateBoard(); 
+  if (turnCount !== 9) {
+    board.set(tileKey, playerTurn());
+    turnCount++;
+    updateBoard();
+  } else {
+    alert("Game already ended!");
+  }
+}
+
+function playerTurn() {
+  let symbol = "";
+  if (turnX) {
+    symbol = "X";
+    turnX = false;
+  } else {
+    symbol = "O";
+    turnX = true;
+  }
+
+  return symbol;
 }
