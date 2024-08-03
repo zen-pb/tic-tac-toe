@@ -75,18 +75,26 @@ gameBoard.addEventListener("click", (event) => {
 });
 
 function playerInput(tileKey) {
+  if (board.get(tileKey) !== "") {
+    alert("Tile already occupied!");
+    return;
+  }
+
   const inputObj = {
     tile: tileKey,
     turnSymbol: playerTurn(),
   };
 
   tileContentChecker(inputObj);
+  board.set(inputObj.tile, inputObj.turnSymbol);
+  turnCount++;
+  updateBoard();
 
-  if (turnCount !== 9) {
-    board.set(inputObj.tile, inputObj.turnSymbol);
-    turnCount++;
-    updateBoard();
-  } else {
+  const winner = winChecker();
+
+  if (winner.bool) {
+    alert(`Game ends. ${winner.symbol} wins!`);
+  } else if (turnCount === 9) {
     alert("Game draw!");
   }
 }
@@ -121,10 +129,16 @@ function winChecker() {
     bool: false,
   };
 
-  if (xTiles.filter((value) => winningCombinations.includes(value))) {
+  const checkWinningCombo = (playerTiles) => {
+    return winningCombinations.some((combo) =>
+      combo.every((tile) => playerTiles.includes(tile))
+    );
+  };
+
+  if (checkWinningCombo(xTiles)) {
     winner.symbol = "X";
     winner.bool = true;
-  } else if (oTiles.filter((value) => winningCombinations.includes(value))) {
+  } else if (checkWinningCombo(oTiles)) {
     winner.symbol = "O";
     winner.bool = true;
   }
