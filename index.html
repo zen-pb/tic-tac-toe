@@ -18,31 +18,43 @@
     <div class="game-mode section">
       <div class="x">
         <label for="x">X</label>
-        <input
-          type="text"
-          placeholder="Enter name"
-          required
-          autocomplete="off"
-        />
+        <div class="text-input">
+          <input
+            type="text"
+            placeholder="Enter name"
+            required
+            autocomplete="off"
+          />
+        </div>
         <ul>
           <li>
-            <input type="radio" name="x-type" id="bot" value="bot" />
-            <label for="bot">
+            <input type="radio" name="x-type" id="x-bot" value="bot" />
+            <label for="x-bot">
               bot
-              <img src="./assets/images/bot.svg" alt="bot icon" />
+              <img
+                src="./assets/images/bot.svg"
+                width="30"
+                height="50"
+                alt="bot icon"
+              />
             </label>
           </li>
           <li>
             <input
               type="radio"
               name="x-type"
-              id="player"
+              id="x-player"
               value="player"
               checked
             />
-            <label for="player">
+            <label for="x-player">
               player
-              <img src="./assets/images/player.svg" alt="player icon" />
+              <img
+                src="./assets/images/player.svg"
+                width="30"
+                height="50"
+                alt="player icon"
+              />
             </label>
           </li>
         </ul>
@@ -50,37 +62,51 @@
 
       <div class="o">
         <label for="o">O</label>
-        <input
-          type="text"
-          placeholder="Enter name"
-          required
-          autocomplete="off"
-        />
+        <div class="text-input">
+          <input
+            type="text"
+            placeholder="Enter name"
+            required
+            autocomplete="off"
+          />
+        </div>
         <ul>
           <li>
-            <input type="radio" name="o-type" id="bot" value="bot" />
-            <label for="bot">
+            <input type="radio" name="o-type" id="o-bot" value="bot" />
+            <label for="o-bot">
               bot
-              <img src="./assets/images/bot.svg" alt="bot icon" />
+              <img
+                src="./assets/images/bot.svg"
+                width="30"
+                height="50"
+                alt="bot icon"
+              />
             </label>
           </li>
           <li>
             <input
               type="radio"
               name="o-type"
-              id="player"
+              id="o-player"
               value="player"
               checked
             />
-            <label for="player">
+            <label for="o-player">
               player
-              <img src="./assets/images/player.svg" alt="player icon" />
+              <img
+                src="./assets/images/player.svg"
+                width="30"
+                height="50"
+                alt="player icon"
+              />
             </label>
           </li>
         </ul>
       </div>
 
-      <button>Start</button>
+      <button>
+        <img src="./assets/images/start-button.svg" alt="Start Button" />
+      </button>
     </div>
 
     <script src="./assets/src/tictactoe.js"></script>
