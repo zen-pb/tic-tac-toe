@@ -25,6 +25,7 @@
 body {
     font-family: "Finger Paint", sans-serif;
     background-color: var(--background);
+    color: var(--primary);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
 }
