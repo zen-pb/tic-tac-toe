@@ -125,3 +125,26 @@
     border: none;
     background-color: inherit;
 }
+
+/* Game */
+
+.game .x-player,
+.game .o-player {
+    display: flex;
+    width: 360px;
+    justify-content: space-between;
+    font-size: 40px;
+    padding: 1rem;
+}
+
+.game .board{
+    width: 360px;
+    height: 360px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    background: url("../images/board.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
