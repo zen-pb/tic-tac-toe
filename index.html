@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./assets/styles/main.css" />
   </head>
   <body>
-    <div class="title section" style="display: none">
+    <div class="title section" >
       <h1>Tic Tac Toe</h1>
       <button>
         <img
@@ -20,7 +20,7 @@
       </button>
     </div>
 
-    <div class="game-mode section" style="display: none">
+    <div class="game-mode section" >
       <div class="x">
         <label for="x">X</label>
         <div class="text-input">
@@ -126,6 +126,20 @@
         <p id="o-score">0</p>
       </div>
     </div>
+
+    <dialog class="modal">
+      <div class="modal-container">
+        <p>zen (x) wins!</p>
+        <div class="buttons">
+          <button>
+            <img src="./assets/images/new-game.svg" alt="New Game Button" />
+          </button>
+          <button>
+            <img src="./assets/images/rematch.svg" alt="Rematch Button" />
+          </button>
+        </div>
+      </div>
+    </dialog>
 
     <script src="./assets/src/tictactoe.js"></script>
   </body>
