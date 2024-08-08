@@ -8,14 +8,19 @@
     <link rel="stylesheet" href="./assets/styles/main.css" />
   </head>
   <body>
-    <div class="title section">
+    <div class="title section" style="display: none">
       <h1>Tic Tac Toe</h1>
       <button>
-        <img src="./assets/images/play-button.svg" alt="Play Button" width="145" height="65">
+        <img
+          src="./assets/images/play-button.svg"
+          alt="Play Button"
+          width="145"
+          height="65"
+        />
       </button>
     </div>
 
-    <div class="game-mode section">
+    <div class="game-mode section" style="display: none">
       <div class="x">
         <label for="x">X</label>
         <div class="text-input">
@@ -107,6 +112,19 @@
       <button>
         <img src="./assets/images/start-button.svg" alt="Start Button" />
       </button>
+    </div>
+
+    <div class="game section">
+      <div class="x-player">
+        <p id="x-score">0</p>
+        <p id="x-player-name">zen (x)</p>
+      </div>
+
+      <div class="board" id="board"></div>
+      <div class="o-player">
+        <p id="o-player-name">zen (o)</p>
+        <p id="o-score">0</p>
+      </div>
     </div>
 
     <script src="./assets/src/tictactoe.js"></script>
