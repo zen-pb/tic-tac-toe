@@ -137,7 +137,7 @@
     padding: 1rem;
 }
 
-.game .board{
+.game .board {
     width: 360px;
     height: 360px;
     display: grid;
@@ -148,3 +148,42 @@
     background-position: center;
 }
 
+/* Modal */
+
+.modal {
+    padding: 0;
+    gap: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border-radius: 24px;
+    width: 360px;
+    height: 320px;
+    background-color: var(--background);
+    font-size: 40px;
+}
+
+.modal-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal::backdrop {
+    background-color: rgba(0, 0, 0, 0.69);
+}
+
+.modal .buttons {
+    display: flex;
+}
+
+.modal button {
+    border: none;
+    background-color: inherit;
+    width: 160px;
+}
