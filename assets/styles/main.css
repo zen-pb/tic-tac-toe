@@ -1,9 +1,14 @@
 .section {
     height: 100vh;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.section.active {
+    display: flex;
+    animation: active 1s ease-in;
 }
 
 /* Title */
@@ -30,6 +35,12 @@
 .game-mode {
     gap: 8rem;
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.game-mode form {
+    display: flex;
+    flex-direction: column;
+    gap: 8rem;
 }
 
 .game-mode .x,
@@ -124,6 +135,12 @@
 .game-mode button {
     border: none;
     background-color: inherit;
+    cursor: pointer;
+    transition: 100ms ease-in-out;
+}
+
+.game-mode button:hover {
+    scale: 1.1;
 }
 
 /* Game */
@@ -186,4 +203,28 @@
     border: none;
     background-color: inherit;
     width: 160px;
+}
+
+/* Animation */
+
+@keyframes active {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes vanish {
+    from {
+        display: flex;
+        opacity: 1;
+    }
+
+    to {
+        display: none;
+        opacity: 0;
+    }
 }
