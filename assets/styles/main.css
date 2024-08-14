@@ -64,6 +64,7 @@
     outline: none;
     padding: 0;
     padding-left: 1rem;
+    transition: opacity 300ms ease;
 }
 
 .game-mode .text-input {
@@ -83,6 +84,7 @@
     height: 19px;
     background: url("../images/text-border-bottom.svg");
     background-size: cover;
+    transition: width 150ms ease;
 }
 
 .game-mode input[type="text"]::placeholder {
@@ -90,9 +92,13 @@
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-.game-mode .text-input:has(input:disabled)::after, input[type="text"]:disabled {
-   opacity: 0.5;
+.game-mode .text-input:has(input:disabled)::after {
+   width: 0%;
 }
+
+.game-mode input[type="text"]:disabled {
+    opacity: 0;
+ }
 
 .game-mode ul {
     margin-top: 1rem;
