@@ -90,6 +90,10 @@
     text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
+.game-mode .text-input:has(input:disabled)::after, input[type="text"]:disabled {
+   opacity: 0.5;
+}
+
 .game-mode ul {
     margin-top: 1rem;
     padding: 0;
