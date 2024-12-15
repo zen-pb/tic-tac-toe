@@ -2,9 +2,15 @@ const Gameboard = (() => {
   const gameBoardDiv = document.getElementById("board");
 
   const board = new Map([
-    ["TL", ""], ["TM", ""], ["TR", ""],
-    ["ML", ""], ["M", ""],  ["MR", ""],
-    ["BL", ""], ["BM", ""], ["BR", ""]
+    ["TL", ""],
+    ["TM", ""],
+    ["TR", ""],
+    ["ML", ""],
+    ["M", ""],
+    ["MR", ""],
+    ["BL", ""],
+    ["BM", ""],
+    ["BR", ""],
   ]);
 
   const winningCombinations = [
@@ -15,7 +21,7 @@ const Gameboard = (() => {
     ["TM", "M", "BM"],
     ["TR", "MR", "BR"],
     ["TL", "M", "BR"],
-    ["TR", "M", "BL"]
+    ["TR", "M", "BL"],
   ];
 
   const render = () => {
@@ -46,8 +52,8 @@ const Gameboard = (() => {
   };
 
   const checkWinner = (playerTiles) => {
-    return winningCombinations.some(combo => 
-      combo.every(tile => playerTiles.includes(tile))
+    return winningCombinations.some((combo) =>
+      combo.every((tile) => playerTiles.includes(tile))
     );
   };
 
@@ -57,35 +63,87 @@ const Gameboard = (() => {
     updateTile,
     isTileEmpty,
     checkWinner,
-    board
+    board,
   };
 })();
 
 const GameController = (() => {
-  const players = {
-    x: Player("Player X", "x"),
-    o: Player("Player O", "o")
-  };
-
-  let currentPlayer = players.x;
+  const players = {};
+  let currentPlayer;
   let turnCount = 0;
-  let gameActive = true;
+  let gameActive = false;
+
+  const modeForm = document.getElementById("modeForm");
+  const xPlayerName = document.getElementById("x-player-name");
+  const oPlayerName = document.getElementById("o-player-name");
+  const xScore = document.getElementById("x-score");
+  const oScore = document.getElementById("o-score");
+  const gameBoard = document.getElementById("board");
+
+  const initializePlayers = (event) => {
+    event.preventDefault();
+
+    const xName = document.getElementById("x-name").value || "Player X";
+    const oName = document.getElementById("o-name").value || "Player O";
+    const xType = document.querySelector('input[name="x-type"]:checked').id;
+    const oType = document.querySelector('input[name="o-type"]:checked').id;
+
+    players.x = Player(xName, "x", xType === "x-bot");
+    players.o = Player(oName, "o", oType === "o-bot");
+
+    xPlayerName.textContent = players.x.playerName;
+    oPlayerName.textContent = players.o.playerName;
+
+    xScore.textContent = players.x.getScore();
+    oScore.textContent = players.o.getScore();
+
+    currentPlayer = players.x;
+
+    turnCount = 0;
+    gameActive = true;
+
+    Gameboard.reset();
+
+    if (currentPlayer.isBot) {
+      setTimeout(botMove, 1500);
+    }
+  };
 
   const switchPlayer = () => {
     currentPlayer = currentPlayer === players.x ? players.o : players.x;
+
+    if (currentPlayer.isBot) {
+      setTimeout(botMove, 1500);
+    }
+  };
+
+  const botMove = () => {
+    if (!gameActive) return;
+
+    const emptyTiles = Array.from(Gameboard.board.entries())
+      .filter(([_, value]) => value === "")
+      .map(([key, _]) => key);
+
+    if (emptyTiles.length > 0) {
+      const randomTile =
+        emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
+      handlePlayerMove(randomTile);
+    }
   };
 
   const handlePlayerMove = (tileKey) => {
     if (!gameActive) return;
 
     if (!Gameboard.isTileEmpty(tileKey)) {
-      alert("Tile already occupied!");
+      if (!currentPlayer.isBot) {
+        alert("Tile already occupied!");
+      }
       return;
     }
 
     const playerTiles = [];
     Gameboard.updateTile(tileKey, currentPlayer.symbol.toUpperCase());
-    
+
     for (let [key, value] of Gameboard.board.entries()) {
       if (value === currentPlayer.symbol.toUpperCase()) {
         playerTiles.push(key);
@@ -109,26 +167,25 @@ const GameController = (() => {
 
   const endGame = (winner, type) => {
     gameActive = false;
+
     if (type === "win") {
-      alert(`Game ends. ${winner.playerName} wins!`);
       winner.addScore();
-    } else {
-      alert("Game is a draw!");
+
+      if (winner.symbol === "x") {
+        xScore.textContent = players.x.getScore();
+      } else {
+        oScore.textContent = players.o.getScore();
+      }
     }
-    viewModal(winner);
-  };
 
-  const resetGame = () => {
-    Gameboard.reset();
-    currentPlayer = players.x;
-    turnCount = 0;
-    gameActive = true;
+    setTimeout(() => {
+      viewModal(winner);
+    }, 650);
   };
-
   const viewModal = (winner) => {
     const modal = document.getElementById("game-modal");
     const verdictP = document.getElementById("verdict");
-    
+
     if (winner) {
       verdictP.textContent = winner.playerName;
     } else {
@@ -139,46 +196,73 @@ const GameController = (() => {
   };
 
   const initEventListeners = () => {
-    const gameBoard = document.getElementById("board");
+    modeForm.addEventListener("submit", initializePlayers);
+
     gameBoard.addEventListener("click", (event) => {
-      if (event.target.classList.contains("item")) {
+      if (!currentPlayer.isBot && event.target.classList.contains("item")) {
         const tileKey = event.target.getAttribute("data-tile");
         handlePlayerMove(tileKey);
       }
     });
 
-    const resetButton = document.getElementById("reset-btn");
-    resetButton.addEventListener("click", resetGame);
+    const rematchButton = document.getElementById("rematch");
+    rematchButton.addEventListener("click", () => {
+      Gameboard.reset();
+      currentPlayer = players.x;
+      turnCount = 0;
+      gameActive = true;
 
-    const closeModalBtn = document.getElementById("close-modal");
-    closeModalBtn.addEventListener("click", () => {
+      if (currentPlayer.isBot) {
+        setTimeout(botMove, 500);
+      }
+
       const modal = document.getElementById("game-modal");
       modal.style.display = "none";
+    });
+
+    const newGameButton = document.getElementById("new-game");
+    newGameButton.addEventListener("click", () => {
+      Gameboard.reset();
+
+      const modal = document.getElementById("game-modal");
+      modal.style.display = "none";
+
+      modeForm.reset();
+
+      currentPlayer = null;
+      turnCount = 0;
+      gameActive = false;
+
+      xScore.textContent = 0;
+      oScore.textContent = 0;
+
+      players.x = null;
+      players.o = null;
     });
   };
 
   const init = () => {
-    Gameboard.render();
     initEventListeners();
   };
 
   return {
-    init
+    init,
   };
 })();
 
-function Player(name, symbol) {
+function Player(name, symbol, isBot = false) {
   let score = 0;
 
   const getScore = () => score;
   const addScore = () => score++;
 
-  return { 
-    name, 
-    symbol, 
-    playerName: `${name} (${symbol.toUpperCase()})`, 
-    getScore, 
-    addScore 
+  return {
+    name,
+    symbol,
+    isBot,
+    playerName: `${name} (${symbol.toUpperCase()})`,
+    getScore,
+    addScore,
   };
 }
 
