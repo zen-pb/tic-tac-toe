@@ -228,6 +228,10 @@ const GameController = (() => {
       modal.style.display = "none";
 
       modeForm.reset();
+      const xName = document.getElementById("x-name");
+      const oName = document.getElementById("o-name");
+      xName.disabled = false;
+      oName.disabled = false;
 
       currentPlayer = null;
       turnCount = 0;
