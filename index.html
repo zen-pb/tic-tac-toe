@@ -113,13 +113,13 @@
             </li>
           </ul>
         </div>
+        <button type="submit" form="modeForm" id="startButton">
+          <img src="./assets/images/start-button.svg" alt="Start Button" />
+        </button>
       </form>
-      <button type="submit" form="modeForm" id="startButton">
-        <img src="./assets/images/start-button.svg" alt="Start Button" />
-      </button>
     </div>
 
-    <div class="game section" style="display: flex;">
+    <div class="game section">
       <div class="x-player">
         <p id="x-score"></p>
         <p id="x-player-name"></p>
@@ -136,10 +136,10 @@
       <div class="modal-container">
         <p id="verdict"></p>
         <div class="buttons">
-          <button>
+          <button id="new-game">
             <img src="./assets/images/new-game.svg" alt="New Game Button" />
           </button>
-          <button>
+          <button id="rematch">
             <img src="./assets/images/rematch.svg" alt="Rematch Button" />
           </button>
         </div>
