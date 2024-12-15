@@ -38,9 +38,9 @@
 }
 
 .game-mode form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
     gap: 8rem;
 }
 
@@ -255,5 +255,17 @@
 
     100% {
         scale: 1;
+    }
+}
+
+@media (min-width: 750px) {
+    .game-mode form {
+        grid-template-columns: repeat(2, minmax(150px, 1fr));
+        grid-template-rows: repeat(2, 1fr);
+        gap: 4rem;
+    }
+
+    #startButton {
+        grid-column: span 2;
     }
 }
