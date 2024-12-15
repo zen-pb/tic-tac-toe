@@ -1,147 +1,187 @@
-//Store gameBoard as array inside gameBoard obj
-//Players are to be store inside an object also
-//An object to control the flow of the game
-//Create a module factory with an IIFE pattern
+const Gameboard = (() => {
+  const gameBoardDiv = document.getElementById("board");
 
-// function Player(name) {
-//   let score = 0;
-//   const getScore = () => score;
-//   const addScore = () => score++;
+  const board = new Map([
+    ["TL", ""], ["TM", ""], ["TR", ""],
+    ["ML", ""], ["M", ""],  ["MR", ""],
+    ["BL", ""], ["BM", ""], ["BR", ""]
+  ]);
 
-//   return { name, getScore, addScore };
-// }
+  const winningCombinations = [
+    ["TL", "TM", "TR"],
+    ["ML", "M", "MR"],
+    ["BL", "BM", "BR"],
+    ["TL", "ML", "BL"],
+    ["TM", "M", "BM"],
+    ["TR", "MR", "BR"],
+    ["TL", "M", "BR"],
+    ["TR", "M", "BL"]
+  ];
 
-// const sanNarabe = (function () {
-//     const start = () => {
-
-//     }
-// })();
-
-document.addEventListener("DOMContentLoaded", () => {
-  printBoard();
-});
-
-let turnX = true;
-let turnCount = 0;
-
-let xTiles = [];
-let oTiles = [];
-
-const winningCombinations = [
-  ["TL", "TM", "TR"],
-  ["ML", "M", "MR"],
-  ["BL", "BM", "BR"],
-  ["TL", "ML", "BL"],
-  ["TM", "M", "BM"],
-  ["TR", "MR", "BR"],
-  ["TL", "M", "BR"],
-  ["TR", "M", "BL"],
-];
-
-let board = new Map([
-  ["TL", ""],
-  ["TM", ""],
-  ["TR", ""],
-  ["ML", ""],
-  ["M", ""],
-  ["MR", ""],
-  ["BL", ""],
-  ["BM", ""],
-  ["BR", ""],
-]);
-
-const gameBoard = document.getElementById("board");
-
-function printBoard() {
-  updateBoard();
-}
-
-function updateBoard() {
-  gameBoard.innerHTML = "";
-  for (let [key, value] of board.entries()) {
-    const div = document.createElement("div");
-    div.classList.add("item");
-    div.setAttribute("data-tile", key);
-    div.textContent = value;
-    gameBoard.appendChild(div);
-  }
-}
-
-gameBoard.addEventListener("click", (event) => {
-  if (event.target.classList.contains("item")) {
-    const tileKey = event.target.getAttribute("data-tile");
-    playerInput(tileKey);
-  }
-});
-
-function playerInput(tileKey) {
-  if (board.get(tileKey) !== "") {
-    alert("Tile already occupied!");
-    return;
-  }
-
-  const inputObj = {
-    tile: tileKey,
-    turnSymbol: playerTurn(),
+  const render = () => {
+    gameBoardDiv.innerHTML = "";
+    for (let [key, value] of board.entries()) {
+      const div = document.createElement("div");
+      div.classList.add("item");
+      div.setAttribute("data-tile", key);
+      div.textContent = value;
+      gameBoardDiv.appendChild(div);
+    }
   };
 
-  tileContentChecker(inputObj);
-  board.set(inputObj.tile, inputObj.turnSymbol);
-  turnCount++;
-  updateBoard();
-
-  const winner = winChecker();
-
-  if (winner.bool) {
-    alert(`Game ends. ${winner.symbol} wins!`);
-  } else if (turnCount === 9) {
-    alert("Game draw!");
-  }
-}
-
-function playerTurn() {
-  let symbol = "";
-  if (turnX) {
-    symbol = "X";
-    turnX = false;
-  } else {
-    symbol = "O";
-    turnX = true;
-  }
-
-  return symbol;
-}
-
-function tileContentChecker(obj) {
-  switch (obj.turnSymbol) {
-    case "X":
-      xTiles.push(obj.tile);
-      break;
-    case "O":
-      oTiles.push(obj.tile);
-      break;
-  }
-}
-
-function winChecker() {
-  let winner = {
-    symbol: "",
-    bool: false,
+  const reset = () => {
+    for (let key of board.keys()) {
+      board.set(key, "");
+    }
+    render();
   };
 
-  const checkWinningCombo = (playerTiles) => {
-    return winningCombinations.some((combo) =>
-      combo.every((tile) => playerTiles.includes(tile))
+  const updateTile = (tileKey, symbol) => {
+    board.set(tileKey, symbol);
+    render();
+  };
+
+  const isTileEmpty = (tileKey) => {
+    return board.get(tileKey) === "";
+  };
+
+  const checkWinner = (playerTiles) => {
+    return winningCombinations.some(combo => 
+      combo.every(tile => playerTiles.includes(tile))
     );
   };
 
-  if (checkWinningCombo(xTiles)) {
-    winner.symbol = "X";
-    winner.bool = true;
-  } else if (checkWinningCombo(oTiles)) {
-    winner.symbol = "O";
-    winner.bool = true;
-  }
+  return {
+    render,
+    reset,
+    updateTile,
+    isTileEmpty,
+    checkWinner,
+    board
+  };
+})();
 
-  return winner;
+const GameController = (() => {
+  const players = {
+    x: Player("Player X", "x"),
+    o: Player("Player O", "o")
+  };
+
+  let currentPlayer = players.x;
+  let turnCount = 0;
+  let gameActive = true;
+
+  const switchPlayer = () => {
+    currentPlayer = currentPlayer === players.x ? players.o : players.x;
+  };
+
+  const handlePlayerMove = (tileKey) => {
+    if (!gameActive) return;
+
+    if (!Gameboard.isTileEmpty(tileKey)) {
+      alert("Tile already occupied!");
+      return;
+    }
+
+    const playerTiles = [];
+    Gameboard.updateTile(tileKey, currentPlayer.symbol.toUpperCase());
+    
+    for (let [key, value] of Gameboard.board.entries()) {
+      if (value === currentPlayer.symbol.toUpperCase()) {
+        playerTiles.push(key);
+      }
+    }
+
+    turnCount++;
+
+    if (Gameboard.checkWinner(playerTiles)) {
+      endGame(currentPlayer, "win");
+      return;
+    }
+
+    if (turnCount === 9) {
+      endGame(null, "draw");
+      return;
+    }
+
+    switchPlayer();
+  };
+
+  const endGame = (winner, type) => {
+    gameActive = false;
+    if (type === "win") {
+      alert(`Game ends. ${winner.playerName} wins!`);
+      winner.addScore();
+    } else {
+      alert("Game is a draw!");
+    }
+    viewModal(winner);
+  };
+
+  const resetGame = () => {
+    Gameboard.reset();
+    currentPlayer = players.x;
+    turnCount = 0;
+    gameActive = true;
+  };
+
+  const viewModal = (winner) => {
+    const modal = document.getElementById("game-modal");
+    const verdictP = document.getElementById("verdict");
+    
+    if (winner) {
+      verdictP.textContent = winner.playerName;
+    } else {
+      verdictP.textContent = "Draw";
+    }
+
+    modal.style.display = "block";
+  };
+
+  const initEventListeners = () => {
+    const gameBoard = document.getElementById("board");
+    gameBoard.addEventListener("click", (event) => {
+      if (event.target.classList.contains("item")) {
+        const tileKey = event.target.getAttribute("data-tile");
+        handlePlayerMove(tileKey);
+      }
+    });
+
+    const resetButton = document.getElementById("reset-btn");
+    resetButton.addEventListener("click", resetGame);
+
+    const closeModalBtn = document.getElementById("close-modal");
+    closeModalBtn.addEventListener("click", () => {
+      const modal = document.getElementById("game-modal");
+      modal.style.display = "none";
+    });
+  };
+
+  const init = () => {
+    Gameboard.render();
+    initEventListeners();
+  };
+
+  return {
+    init
+  };
+})();
+
+function Player(name, symbol) {
+  let score = 0;
+
+  const getScore = () => score;
+  const addScore = () => score++;
+
+  return { 
+    name, 
+    symbol, 
+    playerName: `${name} (${symbol.toUpperCase()})`, 
+    getScore, 
+    addScore 
+  };
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  GameController.init();
+});
