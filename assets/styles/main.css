@@ -8,7 +8,7 @@
 
 .section.active {
     display: flex;
-    animation: active 1s ease-in;
+    animation: active 500ms ease-in;
 }
 
 /* Title */
@@ -93,12 +93,12 @@
 }
 
 .game-mode .text-input:has(input:disabled)::after {
-   width: 0%;
+    width: 0%;
 }
 
 .game-mode input[type="text"]:disabled {
     opacity: 0;
- }
+}
 
 .game-mode ul {
     margin-top: 1rem;
@@ -155,6 +155,10 @@
 
 /* Game */
 
+.game {
+    animation: active 200ms ease-in !important;
+}
+
 .game .x-player,
 .game .o-player {
     display: flex;
@@ -173,6 +177,13 @@
     background: url("../images/board.svg");
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.game .board .item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
 }
 
 /* Modal */
@@ -213,6 +224,12 @@
     border: none;
     background-color: inherit;
     width: 160px;
+    cursor: pointer;
+}
+
+.modal button:hover {
+    scale: 1.1;
+    
 }
 
 /* Animation */
@@ -227,14 +244,16 @@
     }
 }
 
-@keyframes vanish {
-    from {
-        display: flex;
-        opacity: 1;
+@keyframes popup {
+    0% {
+        scale: 0;
     }
 
-    to {
-        display: none;
-        opacity: 0;
+    50% {
+        scale: 1.5;
+    }
+
+    100% {
+        scale: 1;
     }
 }
